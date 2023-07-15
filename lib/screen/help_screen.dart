@@ -28,6 +28,7 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,//to avoid screen overflow incase of keyboard open
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
