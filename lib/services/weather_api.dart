@@ -1,14 +1,13 @@
 import 'package:http/http.dart'as http;
 import 'dart:convert';
-
 import 'package:weather_app/model/location.dart';
 import 'package:weather_app/model/temp_condition.dart';
 import 'package:weather_app/model/weather.dart';
 
 class WeatherApi{
-    static Future<List<Weather>> getData() async {
-    const url='http://api.weatherapi.com/v1/current.json?key=1bc0383d81444b58b1432929200711&q=48.8567,2.350';
-    final uri=Uri.parse(url);
+    static Future<List<Weather>> getData(String location) async {
+    const url='http://api.weatherapi.com/v1/current.json?key=1bc0383d81444b58b1432929200711&q=';
+    final uri=Uri.parse(url + location);
     final response =await http.get(uri);
     final body= response.body;
     final json=jsonDecode(body);
