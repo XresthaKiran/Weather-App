@@ -1,7 +1,7 @@
 class Current {
   final double temp;
   final double wind;
-  final double humidity;
+  final num humidity;
   final WeatherCondition condition;
 
   Current(

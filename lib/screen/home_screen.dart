@@ -27,18 +27,20 @@ class HomepageState extends State<Homepage> {
 
   Future<void> fetchWeatherData() async {
     try {
-      final fetchedWeather = await WeatherApi.getData('london');    //To get the weather information using dafault city=London
+      final fetchedWeather = await WeatherApi.getData(
+          'London'); //To get the weather information using dafault city=London
       setState(() {
         weather = fetchedWeather;
       });
-    } catch (e) {
-      print(e);
+    } catch (e) {if(weather!=null)
+      print(weather!.current.humidity);
     }
   }
 
   Future<void> fetchWeatherDataForCity(String cityName) async {
     try {
-      final fetchedWeather = await WeatherApi.getData(cityName);  //To get the weather information using cityName from the search/citiesList
+      final fetchedWeather = await WeatherApi.getData(
+          cityName); //To get the weather information using cityName from the search/citiesList
       setState(() {
         weather = fetchedWeather;
       });
@@ -50,35 +52,41 @@ class HomepageState extends State<Homepage> {
   Future<void> openCitySelection() async {
     final selectedCity = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CitySelectionScreen()),  //Opens CitySelectionScreen to search and select the city
+      MaterialPageRoute(
+          builder: (context) =>
+              const CitySelectionScreen()), //Opens CitySelectionScreen to search and select the city
     );
     if (selectedCity != null) {
       fetchWeatherDataForCity(selectedCity.city);
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,               //solves screen overflow due to keyboard open
+      resizeToAvoidBottomInset:
+          false, //solves screen overflow due to keyboard open
       floatingActionButton: FloatingActionButton(
         onPressed: openCitySelection,
         child: const Icon(Icons.search),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,          // adapts the height and width according to screen size
+        height: MediaQuery.of(context)
+            .size
+            .height, // adapts the height and width according to screen size
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topRight,
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors: [Color.fromARGB(255, 21, 101, 192), Color.fromARGB(255, 100, 181, 246)])
-        ),
-        
+                colors: [
+              Color.fromARGB(255, 21, 101, 192),
+              Color.fromARGB(255, 100, 181, 246)
+            ])),
+
         child: SingleChildScrollView(
           child: Column(
             children: [
-             
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,20 +120,19 @@ class HomepageState extends State<Homepage> {
               const SizedBox(
                 height: 10,
               ),
-              if(weather!=null)
+              if (weather != null)
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),                  
-                    color: Colors.white.withOpacity(0.5),                  // Container to display weather conditon.
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white.withOpacity(
+                        0.5), // Container to display weather conditon.
                   ),
                   margin: const EdgeInsets.symmetric(horizontal: 25),
                   padding: const EdgeInsets.all(26),
                   height: 100,
-                  
                   child: Row(
                     children: [
-                      Image.network(
-                          'https:${weather!.current.condition.icon}'),
+                      Image.network('https:${weather!.current.condition.icon}'),
                       const SizedBox(
                         width: 15,
                       ),
@@ -151,7 +158,8 @@ class HomepageState extends State<Homepage> {
               Container(
                 height: 300,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),            // Container to show Temperature.
+                  borderRadius: BorderRadius.circular(
+                      15), // Container to show Temperature.
                   color: Colors.white.withOpacity(0.5),
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 25),
@@ -209,117 +217,112 @@ class HomepageState extends State<Homepage> {
               const SizedBox(
                 height: 20,
               ),
-                
-             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),                    // Container to show Humidity
-                        color: Colors.white.withOpacity(0.5)),
-                    margin: const EdgeInsets.fromLTRB(26, 0, 10, 0),
-                    padding: const EdgeInsets.all(26),
-                    height: 200,
-                    child:Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          WeatherIcons.humidity,
-                          color: Color.fromARGB(255, 57, 90, 99),
-                          size: 25,
-                        ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Text('HUMIDITY',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (weather != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 32),
-                            child: Text(
-                              '${weather!.current.humidity.toString()}%',
-                              style: const TextStyle(fontSize: 25),
-                            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              14), // Container to show Humidity
+                          color: Colors.white.withOpacity(0.5)),
+                      margin: const EdgeInsets.fromLTRB(26, 0, 10, 0),
+                      padding: const EdgeInsets.all(26),
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                WeatherIcons.humidity,
+                                color: Color.fromARGB(255, 57, 90, 99),
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 13,
+                              ),
+                              Text('HUMIDITY',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                  ))
+                            ],
                           ),
-                    
-                    
-                      ],
-                    )
-                  ],
-                ),
-                  
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: Colors.white.withOpacity(0.5)),
-                    margin: const EdgeInsets.fromLTRB(10, 0, 26, 0),                               //  Container to show Wind speed
-                    padding: const EdgeInsets.all(26),
-                    height: 200,
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          WeatherIcons.day_windy,
-                          color: Color.fromARGB(255, 57, 90, 99),
-                          size: 25,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text('WIND',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (weather != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25),
-                            child: Text(
-                              weather!.current.wind.toString(),
-                              style: const TextStyle(fontSize: 25),
-                            ),
-                          ),
-                        
-                        
-                      ],
-                    ),
-                    const Center(
-                      child: Text(
-                        'km/hr',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w200),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (weather != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 32),
+                                  child: Text(
+                                    '${weather!.current.humidity.toString()}%',
+                                    style: const TextStyle(fontSize: 25),
+                                  ),
+                                ),
+                            ],
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                  
-                ),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: Colors.white.withOpacity(0.5)),
+                      margin: const EdgeInsets.fromLTRB(
+                          10, 0, 26, 0), //  Container to show Wind speed
+                      padding: const EdgeInsets.all(26),
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                WeatherIcons.day_windy,
+                                color: Color.fromARGB(255, 57, 90, 99),
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text('WIND',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                  ))
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (weather != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 25),
+                                  child: Text(
+                                    weather!.current.wind.toString(),
+                                    style: const TextStyle(fontSize: 25),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const Center(
+                            child: Text(
+                              'km/hr',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.w200),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
