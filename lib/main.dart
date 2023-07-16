@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/screen/help_screen.dart';
-import 'package:weather_app/screen/search_location.dart';
+import 'package:weather_app/screen/select_city.dart';
 
-void main(){
+void main() {
   runApp(const MyApp());
 }
 
@@ -14,10 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'WeatherForecast',
-      theme: ThemeData(
-        primarySwatch: Colors.blue
-      ),
-      home: const Welcome(),
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const HelpScreen(),
     );
   }
 }
