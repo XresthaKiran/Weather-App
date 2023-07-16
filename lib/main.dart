@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/screen/help_screen.dart';
-import 'package:weather_app/screen/home_screen.dart';
+import 'package:weather_app/screen/search_location.dart';
 
 void main(){
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue
       ),
-      home: const HelpScreen(),
+      home: const Welcome(),
     );
   }
 }

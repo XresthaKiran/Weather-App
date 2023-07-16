@@ -5,19 +5,26 @@ import 'package:weather_app/model/temp_condition.dart';
 import 'package:weather_app/model/weather.dart';
 
 class WeatherApi{
-    static Future<List<Weather>> getData(String location) async {
-    const url='http://api.weatherapi.com/v1/current.json?key=1bc0383d81444b58b1432929200711&q=';
-    final uri=Uri.parse(url + location);
-    final response =await http.get(uri);
-    final body= response.body;
-    final json=jsonDecode(body);
-    final results=json as List<dynamic>;
-    final information = results.map((e){
-      final location= Location(name: e['location']['name'], country: e['location']['country'], lat: e['location']['lat'], lon: e['location']['lon']);
-      final condition = WeatherCondition(text:e['current']['condition']['text'], icon: e['current']['condition']['icon']);
-      final current = Current(temp: e['temp_c'], condition: condition);
-      return Weather(location: location, current: current);
-    }).toList();
-     return information;
-  }
+    static Future<Weather> getData() async {
+  const url = 'http://api.weatherapi.com/v1/current.json?key=1bc0383d81444b58b1432929200711&q=London';
+  final uri = Uri.parse(url);
+  final response = await http.get(uri);
+  final body = response.body;
+  final json = jsonDecode(body);
+  final location = Location(
+    name: json['location']['name'],
+    country: json['location']['country'],
+    lat: json['location']['lat'],
+    lon: json['location']['lon'],
+  );
+  final condition = WeatherCondition(
+    text: json['current']['condition']['text'],
+    icon: json['current']['condition']['icon'],
+  );
+  final current = Current(
+    temp: json['current']['temp_c'],
+    condition: condition,
+  );
+  return Weather(location: location, current: current);
+}
 }
