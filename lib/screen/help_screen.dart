@@ -7,10 +7,10 @@ class HelpScreen extends StatefulWidget {
   const HelpScreen({Key? key}) : super(key: key);
 
   @override
-  _HelpScreenState createState() => _HelpScreenState();
+  HelpScreenState createState() => HelpScreenState();
 }
 
-class _HelpScreenState extends State<HelpScreen> {
+class HelpScreenState extends State<HelpScreen> {
   @override
   void initState() {
     super.initState();
@@ -34,10 +34,10 @@ class _HelpScreenState extends State<HelpScreen> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [const Color.fromARGB(255, 21, 101, 192), const Color.fromARGB(255, 100, 181, 246)]),
+                  colors: [Color.fromARGB(255, 21, 101, 192), Color.fromARGB(255, 100, 181, 246)]),
           
           image: DecorationImage(
             fit: BoxFit.fill,
