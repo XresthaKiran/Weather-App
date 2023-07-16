@@ -14,10 +14,10 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    navigateToHome();
   }
 
-  Future<void> _navigateToHome() async {
+  Future<void> navigateToHome() async {
     await Future.delayed(const Duration(seconds: 5));
     if (mounted) {
       Navigator.pushReplacement(
@@ -34,8 +34,11 @@ class _HelpScreenState extends State<HelpScreen> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          color: Colors.blueAccent,
+                  decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [const Color.fromARGB(255, 21, 101, 192), const Color.fromARGB(255, 100, 181, 246)]),
+          
           image: DecorationImage(
             fit: BoxFit.fill,
             image: AssetImage('assets/help.png'),

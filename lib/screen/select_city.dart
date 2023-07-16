@@ -31,34 +31,59 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              controller: searchController,
-              onChanged: filterCities,
-              decoration: InputDecoration(
-                labelText: 'Search City',
+      body: Container(
+        height: MediaQuery.of(context).size.height,          // adapts the height and width according to screen size
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [ const Color.fromARGB(255, 100, 181, 246),const Color.fromARGB(255, 21, 101, 192),])
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24)
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: filterCities,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Search City',
+                  prefixIcon: Icon(Icons.search)
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredCities.length,
-              itemBuilder: (BuildContext context, int index) {
-                final city = filteredCities[index];
-                return ListTile(
-                  title: Text(city.city),
-                  subtitle: Text(city.country),
-                  onTap: () {
-                    Navigator.pop(context, city);
-                  },
-                );
-              },
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredCities.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final city = filteredCities[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(left:16.0,right: 16,),
+                    child: Card(
+                      
+                      shadowColor: Colors.black26,
+                      child: ListTile(
+                        
+                        tileColor: const Color.fromARGB(255, 147, 137, 137).withOpacity(0.5),
+                        title: Text(city.city),
+                        subtitle: Text(city.country),
+                        onTap: () {
+                          Navigator.pop(context, city);
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

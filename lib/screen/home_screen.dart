@@ -27,7 +27,7 @@ class HomepageState extends State<Homepage> {
 
   Future<void> fetchWeatherData() async {
     try {
-      final fetchedWeather = await WeatherApi.getData('london');
+      final fetchedWeather = await WeatherApi.getData('london');    //To get the weather information using dafault city=London
       setState(() {
         weather = fetchedWeather;
       });
@@ -38,7 +38,7 @@ class HomepageState extends State<Homepage> {
 
   Future<void> fetchWeatherDataForCity(String cityName) async {
     try {
-      final fetchedWeather = await WeatherApi.getData(cityName);
+      final fetchedWeather = await WeatherApi.getData(cityName);  //To get the weather information using cityName from the search/citiesList
       setState(() {
         weather = fetchedWeather;
       });
@@ -50,7 +50,7 @@ class HomepageState extends State<Homepage> {
   Future<void> openCitySelection() async {
     final selectedCity = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CitySelectionScreen()),
+      MaterialPageRoute(builder: (context) => CitySelectionScreen()),  //Opens CitySelectionScreen to search and select the city
     );
     if (selectedCity != null) {
       fetchWeatherDataForCity(selectedCity.city);
@@ -61,262 +61,266 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,               //solves screen overflow due to keyboard open
       floatingActionButton: FloatingActionButton(
         onPressed: openCitySelection,
         child: Icon(Icons.search),
       ),
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.purple,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 10),
-                      child: Text(
-                        'Weather APP',
-                        style: GoogleFonts.poppins(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w300,
-                          color: const Color(0xfff7e5b7),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10, top: 10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HelpScreen(),
-                            ),
-                          );
-                        },
-                        child: Text('Help'),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                if(weather!=null)
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.green,
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 25),
-                    padding: EdgeInsets.all(26),
-                    height: 100,
-                    
-                    child: Row(
-                      children: [
-                        Image.network(
-                            'https:${weather!.current.condition.icon}'),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              weather!.current.condition.text,
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                                'In ${weather!.location.name},${weather!.location.country}',
-                                style: TextStyle(fontSize: 16))
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  height: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.green,
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: 25),
-                  padding: EdgeInsets.all(26),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            WeatherIcons.thermometer,
-                            color: Color.fromARGB(255, 57, 90, 99),
-                            size: 45,
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text('TEMPERATURE',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                              ))
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (weather != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 50),
-                              child: Text(
-                                weather!.current.temp.toString(),
-                                style: TextStyle(fontSize: 50),
-                              ),
-                            ),
-                          Text(
-                            'o',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 30),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 50),
-                            child: Text(
-                              'C',
-                              style: TextStyle(
-                                  fontSize: 55, fontWeight: FontWeight.w200),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                  
-               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Container(
+        height: MediaQuery.of(context).size.height,          // adapts the height and width according to screen size
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [const Color.fromARGB(255, 21, 101, 192), const Color.fromARGB(255, 100, 181, 246)])
+        ),
+        
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+             
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                  child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: Colors.white.withOpacity(0.5)),
-                      margin: EdgeInsets.fromLTRB(26, 0, 10, 0),
-                      padding: EdgeInsets.all(26),
-                      height: 200,
-                      child:Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            WeatherIcons.humidity,
-                            color: Color.fromARGB(255, 57, 90, 99),
-                            size: 25,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('HUMIDITY',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                              ))
-                        ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 20),
+                    child: Text(
+                      'Weather APP',
+                      style: GoogleFonts.poppins(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w300,
+                        color: const Color(0xfff7e5b7),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (weather != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25),
-                              child: Text(
-                                '${weather!.current.humidity.toString()}%',
-                                style: TextStyle(fontSize: 25),
-                              ),
-                            ),
-                      
-                      
-                        ],
-                      )
-                    ],
-                  ),
-                    
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: Colors.white.withOpacity(0.5)),
-                      margin: EdgeInsets.fromLTRB(10, 0, 26, 0),
-                      padding: EdgeInsets.all(26),
-                      height: 200,
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            WeatherIcons.day_windy,
-                            color: Color.fromARGB(255, 57, 90, 99),
-                            size: 25,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10, top: 25),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HelpScreen(),
                           ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text('WIND',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                              ))
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (weather != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25),
-                              child: Text(
-                                weather!.current.wind.toString(),
-                                style: TextStyle(fontSize: 25),
-                              ),
-                            ),
-                          
-                          
-                        ],
-                      ),
-                      Center(
-                        child: Text(
-                          'km/hr',
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.w200),
-                        ),
-                      )
-                    ],
-                    
-                  ),
+                        );
+                      },
+                      child: Text('Help'),
                     ),
                   ),
                 ],
               ),
+              SizedBox(
+                height: 10,
+              ),
+              if(weather!=null)
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),                  
+                    color: Colors.white.withOpacity(0.5),                  // Container to display weather conditon.
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.all(26),
+                  height: 100,
+                  
+                  child: Row(
+                    children: [
+                      Image.network(
+                          'https:${weather!.current.condition.icon}'),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            weather!.current.condition.text,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                              'In ${weather!.location.name},${weather!.location.country}',
+                              style: TextStyle(fontSize: 16))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),            // Container to show Temperature.
+                  color: Colors.white.withOpacity(0.5),
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 25),
+                padding: EdgeInsets.all(26),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          WeatherIcons.thermometer,
+                          color: Color.fromARGB(255, 57, 90, 99),
+                          size: 45,
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text('TEMPERATURE',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                            ))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (weather != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 50),
+                            child: Text(
+                              weather!.current.temp.toString(),
+                              style: TextStyle(fontSize: 50),
+                            ),
+                          ),
+                        Text(
+                          'o',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300, fontSize: 30),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 50),
+                          child: Text(
+                            'C',
+                            style: TextStyle(
+                                fontSize: 55, fontWeight: FontWeight.w200),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+                
+             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),                    // Container to show Humidity
+                        color: Colors.white.withOpacity(0.5)),
+                    margin: EdgeInsets.fromLTRB(26, 0, 10, 0),
+                    padding: EdgeInsets.all(26),
+                    height: 200,
+                    child:Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          WeatherIcons.humidity,
+                          color: Color.fromARGB(255, 57, 90, 99),
+                          size: 25,
+                        ),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text('HUMIDITY',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (weather != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 32),
+                            child: Text(
+                              '${weather!.current.humidity.toString()}%',
+                              style: TextStyle(fontSize: 25),
+                            ),
+                          ),
+                    
+                    
+                      ],
+                    )
+                  ],
+                ),
+                  
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.white.withOpacity(0.5)),
+                    margin: EdgeInsets.fromLTRB(10, 0, 26, 0),                               //  Container to show Wind speed
+                    padding: EdgeInsets.all(26),
+                    height: 200,
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          WeatherIcons.day_windy,
+                          color: Color.fromARGB(255, 57, 90, 99),
+                          size: 25,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text('WIND',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (weather != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 25),
+                            child: Text(
+                              weather!.current.wind.toString(),
+                              style: TextStyle(fontSize: 25),
+                            ),
+                          ),
+                        
+                        
+                      ],
+                    ),
+                    Center(
+                      child: Text(
+                        'km/hr',
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.w200),
+                      ),
+                    )
+                  ],
+                  
+                ),
+                  ),
+                ),
               ],
             ),
+            ],
           ),
         ),
       ),
