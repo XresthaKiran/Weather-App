@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/model/city.dart';
 import 'package:weather_app/model/weather.dart';
 import 'package:weather_app/screen/help_screen.dart';
@@ -17,31 +18,39 @@ class Homepage extends StatefulWidget {
 
 class HomepageState extends State<Homepage> {
   Weather? weather;
+  City? selectedCity;
   List<City> filteredCities = City.citiesList;
   late bool servicePermission =false;
   late LocationPermission permission;
   @override
   void initState() {
     super.initState();
-    getLocation();
+    loadSavedLocation();
   }
   
   void getLocation() async{
     servicePermission = await Geolocator.isLocationServiceEnabled();
     try{
       permission = await Geolocator.checkPermission();
-      if(permission == LocationPermission.denied){
+      if(permission == LocationPermission.denied ){
         permission = await Geolocator.requestPermission();
       }
-      final position=await Geolocator.getCurrentPosition(
+      if(permission==LocationPermission.deniedForever){
+        fetchWeatherDataForCity('kathmandu');
+      }
+      if(servicePermission && permission == LocationPermission.whileInUse){
+        final position=await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high
       );
       final latitude=position.latitude;
       final longitude=position.longitude;
       fetchWeatherDataForLocation(latitude,longitude);
+      }
+      
     }catch(e){
       print(e.toString());
     }
+ 
   }
 
     void fetchWeatherDataForLocation(double latitude, double longitude) async {
@@ -68,6 +77,9 @@ class HomepageState extends State<Homepage> {
       print(e);
     }
   }
+  
+ 
+
 
   Future<void> openCitySelection() async {
     final selectedCity = await Navigator.push(
@@ -77,6 +89,9 @@ class HomepageState extends State<Homepage> {
               const CitySelectionScreen()), //Opens CitySelectionScreen to search and select the city
     );
     if (selectedCity != null) {
+      setState(() {
+        this.selectedCity=selectedCity;
+      });
       fetchWeatherDataForCity(selectedCity.city);
     }
   }
@@ -89,6 +104,19 @@ class HomepageState extends State<Homepage> {
     
   }
 
+   void loadSavedLocation() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final savedLocation = prefs.getString('selectedCity');
+    if (savedLocation != null) {
+      setState(() {
+        selectedCity = City(
+          isSelected: true,city: savedLocation,
+          country: '');
+      });
+      fetchWeatherDataForCity(savedLocation);
+    }else{getLocation();}
+  }
+
   
 
   @override
@@ -98,8 +126,8 @@ class HomepageState extends State<Homepage> {
         resizeToAvoidBottomInset:
             false, //solves screen overflow due to keyboard open
         floatingActionButton: FloatingActionButton(
-          onPressed: openCitySelection,
-          child: const Icon(Icons.search),
+          onPressed: getLocation,
+          child: const Icon(Icons.pin_drop_sharp),
         ),
         body: weather != null
             ? Container(
@@ -120,7 +148,7 @@ class HomepageState extends State<Homepage> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
@@ -135,6 +163,26 @@ class HomepageState extends State<Homepage> {
                               ),
                             ),
                           ),
+                             InkWell(
+                                               child: Container(
+                                                 padding: const EdgeInsets.symmetric(horizontal: 8),
+                                               margin: const EdgeInsets.fromLTRB(58, 15, 12, 7),
+                                                 width: 32,
+                                                 height: 32,
+                                                 decoration: BoxDecoration(
+                                                   borderRadius: BorderRadius.circular(150/2),
+                                                   color: Colors.white.withOpacity(0.75)
+                                                 ),
+                                                 child: const Icon(
+                                                   Icons.search_outlined,
+                                                   color: Colors.blue,
+                                                   size: 16,
+                                                 ),
+                                               ),
+                                               onTap: openCitySelection
+                                             ),
+
+
                           Padding(
                             padding: const EdgeInsets.only(right: 10, top: 25),
                             child: ElevatedButton(
@@ -394,20 +442,32 @@ class HomepageState extends State<Homepage> {
                           ),
                         ),
                       ),
+                       InkWell(
+                                               child: Container(
+                                                 padding: const EdgeInsets.symmetric(horizontal: 8),
+                                               margin: const EdgeInsets.fromLTRB(58, 36, 12, 7),
+                                                 width: 32,
+                                                 height: 32,
+                                                 decoration: BoxDecoration(
+                                                   borderRadius: BorderRadius.circular(150/2),
+                                                   color: Colors.white.withOpacity(0.75)
+                                                 ),
+                                                 child: const Icon(
+                                                   Icons.search_outlined,
+                                                   color: Colors.blue,
+                                                   size: 16,
+                                                 ),
+                                               ),
+                                               onTap: openCitySelection
+                                             ),
+
                       Padding(
-                        padding: const EdgeInsets.only(right: 10, top: 25),
-                        child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HelpScreen(),
-                                  ),
-                                );
-                              },
+                            padding: const EdgeInsets.only(right: 10, top: 25),
+                            child: ElevatedButton(
+                              onPressed: openHelpScreen,
                               child: const Text('Help'),
                             ),
-                      ),
+                          ),
                     ],
                   ),
                   const SizedBox(height: 340,

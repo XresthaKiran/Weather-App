@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/model/city.dart';
 
 class CitySelectionScreen extends StatefulWidget {
@@ -12,6 +13,8 @@ class CitySelectionScreen extends StatefulWidget {
 class CitySelectionScreenState extends State<CitySelectionScreen> {
   TextEditingController searchController = TextEditingController();
   List<City> filteredCities = City.citiesList;
+  City selectedCity = City(isSelected: false, city: 'Kathmandu', country: 'Nepal');
+  bool isSaved=false;
 
   @override
   void initState() {
@@ -29,9 +32,11 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
     });
   }
 
-  void selectCity(City selectedCity) {
+  Future<void> selectCity(City selectedCity) async {
+    SharedPreferences prefs= await SharedPreferences.getInstance();
+    await prefs.setString('selectedCity',selectedCity.city);
   setState(() {
-   
+    isSaved=true;
     filteredCities.forEach((city) {
       if (city == selectedCity) {
         city.isSelected = true;
@@ -45,11 +50,10 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       floatingActionButton: FloatingActionButton(
-        shape:BeveledRectangleBorder(borderRadius: BorderRadius.circular(3)),
+       floatingActionButton:ElevatedButton(
         onPressed: () {
           // Return the selected city to the previous screen
-          final selectedCity = filteredCities.firstWhere((city) => city.isSelected, orElse: () {return City(isSelected: false, city: 'Kathmandu', country: 'Nepal');} );
+           selectedCity = filteredCities.firstWhere((city) => city.isSelected, orElse: () {return City(isSelected: false, city: 'Kathmandu', country: 'Nepal');} );
           if(selectedCity.isSelected){
           Navigator.pop(context, selectedCity);
           }else{
@@ -79,7 +83,7 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
           }
           
         },
-        child: Text('Save'),
+        child: Text(isSaved?'Update':'Save'),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,          // adapts the height and width according to screen size

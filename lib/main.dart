@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Weather Forecast',
+      title: 'Weather APP',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const HelpScreen(),
     );
