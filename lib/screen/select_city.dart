@@ -37,13 +37,13 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
     await prefs.setString('selectedCity',selectedCity.city);
   setState(() {
     isSaved=true;
-    filteredCities.forEach((city) {
+    for (var city in filteredCities) {
       if (city == selectedCity) {
         city.isSelected = true;
       } else {
         city.isSelected = false;
       }
-    });
+    }
   });
 }
 
@@ -59,7 +59,7 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
           }else{
             showModalBottomSheet(context: context, builder: (BuildContext context) {
               return Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(colors:[Color.fromARGB(255, 47, 109, 170),Color.fromARGB(255, 57, 131, 216)] ,begin: Alignment.bottomLeft,end: Alignment.topRight)
                 ),
                 height:MediaQuery.of(context).size.height*0.05,
@@ -67,13 +67,13 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10),
                       child: Text('Please select a city',style: TextStyle(fontSize: 20,color: Colors.white),),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
-                      child: ElevatedButton(style: ElevatedButton.styleFrom(primary: Colors.white30),onPressed: (){Navigator.pop(context);}, child: Text('Ok',style: TextStyle(color: Colors.white),)),
+                      child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.white30),onPressed: (){Navigator.pop(context);}, child: const Text('Ok',style: TextStyle(color: Colors.white),)),
                     )
                   ],
                 ),
@@ -129,7 +129,7 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8 ),
+              padding: const EdgeInsets.symmetric(horizontal: 8 ),
               margin: const EdgeInsets.only(left: 20,right: 20,top: 20,bottom: 5),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.9),
@@ -147,7 +147,7 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: filteredCities.length,
                 itemBuilder: (BuildContext context, int index) {
                   final city = filteredCities[index];

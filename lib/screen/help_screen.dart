@@ -45,72 +45,74 @@ class HelpScreenState extends State<HelpScreen> {
           
 
         ),
-        child: Column(
-          children: [
-            
-            const SizedBox(height: 30),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 90,
-                  bottom: 50,
-                  left: 60,
-                  right: 60,
-                ),
-                child: Text(
-                  '“We show weather for you”',
-                  style: GoogleFonts.capriola(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xfff7e5b7),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              
+              const SizedBox(height: 30),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 90,
+                    bottom: 50,
+                    left: 60,
+                    right: 60,
+                  ),
+                  child: Text(
+                    '“We show weather for you”',
+                    style: GoogleFonts.capriola(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xfff7e5b7),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 88,
-              height: 110,
-              child: Image.asset(
-                'assets/R.png',
+              SizedBox(
                 width: 88,
                 height: 110,
+                child: Image.asset(
+                  'assets/R.png',
+                  width: 88,
+                  height: 110,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Weather APP',
-              style: GoogleFonts.lato(
-                fontSize: 32,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xfff7e5b7),
+              const SizedBox(height: 20),
+              Text(
+                'Weather APP',
+                style: GoogleFonts.lato(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xfff7e5b7),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 180,
-              child: SpinKitCircle(
-                color: Colors.lightBlueAccent,
-                size: 50.0,
+              const SizedBox(
+                height: 180,
+                child: SpinKitCircle(
+                  color: Colors.lightBlueAccent,
+                  size: 50.0,
+                ),
               ),
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Homepage()),
-                );
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Homepage()),
+                  );
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                backgroundColor: const Color.fromARGB(255, 99, 156, 253),
+                splashColor: Colors.blueAccent,
+                foregroundColor: Colors.black45,
+                child:Text('Skip',style: GoogleFonts.capriola(
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromARGB(255, 255, 249, 233)),
               ),
-              backgroundColor: Color.fromARGB(255, 243, 199, 87),
-              splashColor: Colors.blueAccent,
-              foregroundColor: Colors.black45,
-              child:Text('Skip',style: GoogleFonts.capriola(
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromARGB(255, 244, 237, 220)),
-            ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

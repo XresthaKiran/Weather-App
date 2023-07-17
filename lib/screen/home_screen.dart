@@ -99,7 +99,7 @@ class HomepageState extends State<Homepage> {
     Future<void> openHelpScreen() async {
   await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HelpScreen()),
+      MaterialPageRoute(builder: (context) => const HelpScreen()),
     );
     
   }
@@ -148,7 +148,7 @@ class HomepageState extends State<Homepage> {
                   child: Column(
                     children: [
                       Row(
-                        
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
@@ -163,33 +163,37 @@ class HomepageState extends State<Homepage> {
                               ),
                             ),
                           ),
-                             InkWell(
-                                               child: Container(
-                                                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                                               margin: const EdgeInsets.fromLTRB(58, 15, 12, 7),
-                                                 width: 32,
-                                                 height: 32,
-                                                 decoration: BoxDecoration(
-                                                   borderRadius: BorderRadius.circular(150/2),
-                                                   color: Colors.white.withOpacity(0.75)
+                             Row(
+                               children: [
+                                 InkWell(
+                                                   onTap: openCitySelection,
+                                                   child: Container(
+                                                     padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                   margin: const EdgeInsets.fromLTRB(58, 31, 12, 7),
+                                                     width: 32,
+                                                     height: 32,
+                                                     decoration: BoxDecoration(
+                                                       borderRadius: BorderRadius.circular(150/2),
+                                                       color: Colors.white.withOpacity(0.75)
+                                                     ),
+                                                     child: const Icon(
+                                                       Icons.search_outlined,
+                                                       color: Colors.blue,
+                                                       size: 16,
+                                                     ),
+                                                   )
                                                  ),
-                                                 child: const Icon(
-                                                   Icons.search_outlined,
-                                                   color: Colors.blue,
-                                                   size: 16,
-                                                 ),
-                                               ),
-                                               onTap: openCitySelection
-                                             ),
 
 
                           Padding(
                             padding: const EdgeInsets.only(right: 10, top: 25),
                             child: ElevatedButton(
-                              onPressed: openHelpScreen,
-                              child: const Text('Help'),
+                                  onPressed: openHelpScreen,
+                                  child: const Text('Help'),
                             ),
                           ),
+                               ],
+                             ),
                         ],
                       ),
                       const SizedBox(
@@ -427,61 +431,69 @@ class HomepageState extends State<Homepage> {
                       Color.fromARGB(255, 21, 101, 192),
                       Color.fromARGB(255, 100, 181, 246)
                     ])),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 20),
-                        child: Text(
-                          'Weather APP',
-                          style: GoogleFonts.poppins(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w300,
-                            color: const Color(0xfff7e5b7),
-                          ),
-                        ),
-                      ),
-                       InkWell(
-                                               child: Container(
-                                                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                                               margin: const EdgeInsets.fromLTRB(58, 36, 12, 7),
-                                                 width: 32,
-                                                 height: 32,
-                                                 decoration: BoxDecoration(
-                                                   borderRadius: BorderRadius.circular(150/2),
-                                                   color: Colors.white.withOpacity(0.75)
-                                                 ),
-                                                 child: const Icon(
-                                                   Icons.search_outlined,
-                                                   color: Colors.blue,
-                                                   size: 16,
-                                                 ),
-                                               ),
-                                               onTap: openCitySelection
-                                             ),
-
-                      Padding(
-                            padding: const EdgeInsets.only(right: 10, top: 25),
-                            child: ElevatedButton(
-                              onPressed: openHelpScreen,
-                              child: const Text('Help'),
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 20),
+                          child: Text(
+                            'Weather APP',
+                            style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w300,
+                              color: const Color(0xfff7e5b7),
                             ),
                           ),
-                    ],
-                  ),
-                  const SizedBox(height: 340,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(color: Color.fromARGB(255, 221, 229, 243),), 
+                        ),
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                           children: [
+                             InkWell(
+                                                     onTap: openCitySelection,
+                                                     child: Container(
+                                                       padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                     margin: const EdgeInsets.fromLTRB(58, 36, 12, 7),
+                                                       width: 32,
+                                                       height: 32,
+                                                       decoration: BoxDecoration(
+                                                         borderRadius: BorderRadius.circular(150/2),
+                                                         color: Colors.white.withOpacity(0.75)
+                                                       ),
+                                                       child: const Icon(
+                                                         Icons.search_outlined,
+                                                         color: Colors.blue,
+                                                         size: 16,
+                                                       ),
+                                                     )
+                                                   ),
+                
+                        Padding(
+                                  padding: const EdgeInsets.only(right: 10, top: 25),
+                                  child: ElevatedButton(
+                                    onPressed: openHelpScreen,
+                                    child: const Text('Help'),
+                                  ),
+                                ),
+                           ],
+                         ),
                       ],
                     ),
-                  )
-
-
-                  
-                ])));
+                    Container(
+                      height: MediaQuery.of(context).size.height/1.2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: 
+                        [
+                          CircularProgressIndicator(color: Color.fromARGB(255, 221, 229, 243),),
+                        ],
+                      ),
+                    )
+                
+                
+                    
+                  ]),
+                )));
   }
 }
