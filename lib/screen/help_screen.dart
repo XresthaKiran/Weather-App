@@ -35,17 +35,19 @@ class HelpScreenState extends State<HelpScreen> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
+                              image: DecorationImage(
+            fit: BoxFit.fill,
+            image: AssetImage('assets/help.png'),
+          ),
             gradient: LinearGradient(begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [Color.fromARGB(255, 21, 101, 192), Color.fromARGB(255, 100, 181, 246)]),
           
-          image: DecorationImage(
-            fit: BoxFit.fill,
-            image: AssetImage('assets/help.png'),
-          ),
+
         ),
         child: Column(
           children: [
+            
             const SizedBox(height: 30),
             Center(
               child: Padding(
@@ -100,11 +102,14 @@ class HelpScreenState extends State<HelpScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              backgroundColor: const Color.fromARGB(255, 241, 205, 114),
+              backgroundColor: Color.fromARGB(255, 243, 199, 87),
               splashColor: Colors.blueAccent,
               foregroundColor: Colors.black45,
-              child: const Icon(Icons.navigate_next_rounded),
+              child:Text('Skip',style: GoogleFonts.capriola(
+                    fontWeight: FontWeight.w400,
+                    color: Color.fromARGB(255, 244, 237, 220)),
             ),
+            )
           ],
         ),
       ),

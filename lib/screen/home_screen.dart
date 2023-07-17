@@ -6,6 +6,7 @@ import 'package:weather_app/screen/help_screen.dart';
 import 'package:weather_app/screen/select_city.dart';
 import 'package:weather_app/services/weather_api.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -16,26 +17,45 @@ class Homepage extends StatefulWidget {
 
 class HomepageState extends State<Homepage> {
   Weather? weather;
-  TextEditingController searchController = TextEditingController();
   List<City> filteredCities = City.citiesList;
-
+  late bool servicePermission =false;
+  late LocationPermission permission;
   @override
   void initState() {
     super.initState();
-    fetchWeatherData();
+    getLocation();
+  }
+  
+  void getLocation() async{
+    servicePermission = await Geolocator.isLocationServiceEnabled();
+    try{
+      permission = await Geolocator.checkPermission();
+      if(permission == LocationPermission.denied){
+        permission = await Geolocator.requestPermission();
+      }
+      final position=await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high
+      );
+      final latitude=position.latitude;
+      final longitude=position.longitude;
+      fetchWeatherDataForLocation(latitude,longitude);
+    }catch(e){
+      print(e.toString());
+    }
   }
 
-  Future<void> fetchWeatherData() async {
+    void fetchWeatherDataForLocation(double latitude, double longitude) async {
     try {
-      final fetchedWeather = await WeatherApi.getData(
-          'London'); //To get the weather information using dafault city=London
+      final fetchedWeather = await WeatherApi.getDataForLocation(latitude, longitude);
       setState(() {
         weather = fetchedWeather;
       });
     } catch (e) {
-      if (weather != null) print(weather!.current.humidity);
+      print(e);
     }
   }
+
+
 
   Future<void> fetchWeatherDataForCity(String cityName) async {
     try {
@@ -61,8 +81,19 @@ class HomepageState extends State<Homepage> {
     }
   }
 
+    Future<void> openHelpScreen() async {
+  await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HelpScreen()),
+    );
+    
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         resizeToAvoidBottomInset:
             false, //solves screen overflow due to keyboard open
@@ -90,9 +121,11 @@ class HomepageState extends State<Homepage> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 20),
+                            
+                            padding: const EdgeInsets.only(left: 12, top: 25),
                             child: Text(
                               'Weather APP',
                               style: GoogleFonts.poppins(
@@ -105,14 +138,7 @@ class HomepageState extends State<Homepage> {
                           Padding(
                             padding: const EdgeInsets.only(right: 10, top: 25),
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HelpScreen(),
-                                  ),
-                                );
-                              },
+                              onPressed: openHelpScreen,
                               child: const Text('Help'),
                             ),
                           ),
@@ -125,32 +151,40 @@ class HomepageState extends State<Homepage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white.withOpacity(
-                              0.5), // Container to display weather conditon.
+                              0.6), // Container to display weather conditon.
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 25),
                         padding: const EdgeInsets.all(26),
                         height: 100,
-                        child: Row(
-                          children: [
-                            Image.network(
-                                'https:${weather!.current.condition.icon}'),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  weather!.current.condition.text,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                                Text(
-                                    'In ${weather!.location.name},${weather!.location.country}',
-                                    style: const TextStyle(fontSize: 16))
-                              ],
-                            )
-                          ],
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              Image.network(
+                                  'https:${weather!.current.condition.icon}'),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        weather!.current.condition.text,
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                      'In ${weather!.location.name},${weather!.location.country}',
+                                      style: const TextStyle(fontSize: 16))
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -161,7 +195,7 @@ class HomepageState extends State<Homepage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(
                               15), // Container to show Temperature.
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withOpacity(0.6),
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 25),
                         padding: const EdgeInsets.all(26),
@@ -228,7 +262,7 @@ class HomepageState extends State<Homepage> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       14), // Container to show Humidity
-                                  color: Colors.white.withOpacity(0.5)),
+                                  color: Colors.white.withOpacity(0.6)),
                               margin: const EdgeInsets.fromLTRB(26, 0, 10, 0),
                               padding: const EdgeInsets.all(26),
                               height: 200,
@@ -273,7 +307,7 @@ class HomepageState extends State<Homepage> {
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
-                                  color: Colors.white.withOpacity(0.5)),
+                                  color: Colors.white.withOpacity(0.6)),
                               margin: const EdgeInsets.fromLTRB(10, 0, 26,
                                   0), //  Container to show Wind speed
                               padding: const EdgeInsets.all(26),
@@ -376,22 +410,12 @@ class HomepageState extends State<Homepage> {
                       ),
                     ],
                   ),
-                  Container(height: 340,
+                  const SizedBox(height: 340,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height:20),
-                        GestureDetector(
-                          onTap: fetchWeatherData,
-                          
-                          child: Text('Reload',style: GoogleFonts.lato(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xfff7e5b7),
-                              ),),
-                        )
+                        CircularProgressIndicator(color: Color.fromARGB(255, 221, 229, 243),), 
                       ],
                     ),
                   )

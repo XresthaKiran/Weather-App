@@ -31,4 +31,32 @@ class WeatherApi {
     );
     return Weather(location: location, current: current);
   }
+   
+   static Future<Weather> getDataForLocation(double latitude,double longitude) async {
+    const url =
+        'http://api.weatherapi.com/v1/current.json?key=c6b5e4b6203642b099171105231407&q=';
+    final uri = Uri.parse(url+('$latitude,$longitude'));
+    final response = await http.get(uri);
+    final body = response.body;
+    final json = jsonDecode(body);
+    final location = Location(
+      name: json['location']['name'],
+      country: json['location']['country'],
+      lat: json['location']['lat'],
+      lon: json['location']['lon'],
+    );
+    final condition = WeatherCondition(
+      
+      text: json['current']['condition']['text'],
+      icon: json['current']['condition']['icon'],
+    );
+    final current = Current(
+      humidity: json['current']['humidity'],
+      wind: json['current']['wind_kph'],
+      temp: json['current']['temp_c'],
+      condition: condition,
+    );
+    return Weather(location: location, current: current);
+  }
+
 }

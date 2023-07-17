@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/model/city.dart';
 
 class CitySelectionScreen extends StatefulWidget {
@@ -28,65 +29,148 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
     });
   }
 
+  void selectCity(City selectedCity) {
+  setState(() {
+   
+    filteredCities.forEach((city) {
+      if (city == selectedCity) {
+        city.isSelected = true;
+      } else {
+        city.isSelected = false;
+      }
+    });
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,          // adapts the height and width according to screen size
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [ Color.fromARGB(255, 100, 181, 246),Color.fromARGB(255, 21, 101, 192),])
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+       floatingActionButton: FloatingActionButton(
+        shape:BeveledRectangleBorder(borderRadius: BorderRadius.circular(3)),
+        onPressed: () {
+          // Return the selected city to the previous screen
+          final selectedCity = filteredCities.firstWhere((city) => city.isSelected, orElse: () {return City(isSelected: false, city: 'Kathmandu', country: 'Nepal');} );
+          if(selectedCity.isSelected){
+          Navigator.pop(context, selectedCity);
+          }else{
+            showModalBottomSheet(context: context, builder: (BuildContext context) {
+              return Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24)
+                  gradient: LinearGradient(colors:[Color.fromARGB(255, 47, 109, 170),Color.fromARGB(255, 57, 131, 216)] ,begin: Alignment.bottomLeft,end: Alignment.topRight)
                 ),
-                child: TextField(
-                  controller: searchController,
-                  onChanged: filterCities,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Search City',
-                    prefixIcon: Icon(Icons.search)
-                  ),
+                height:MediaQuery.of(context).size.height*0.05,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text('Please select a city',style: TextStyle(fontSize: 20,color: Colors.white),),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: ElevatedButton(style: ElevatedButton.styleFrom(primary: Colors.white30),onPressed: (){Navigator.pop(context);}, child: Text('Ok',style: TextStyle(color: Colors.white),)),
+                    )
+                  ],
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: filteredCities.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final city = filteredCities[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(left:16.0,right: 16,),
-                      child: Card(
-                        
-                        shadowColor: Colors.black26,
-                        child: ListTile(
-                          
-                          tileColor: const Color.fromARGB(255, 147, 137, 137).withOpacity(0.5),
-                          title: Text(city.city),
-                          subtitle: Text(city.country),
-                          onTap: () {
-                            Navigator.pop(context, city);
-                          },
-                        ),
+              );
+            }
+            );
+          }
+          
+        },
+        child: Text('Save'),
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,          // adapts the height and width according to screen size
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [ Color.fromARGB(255, 100, 181, 246),Color.fromARGB(255, 21, 101, 192),])
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 25),
+              child: Row(
+                children: [
+                  InkWell(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(150/2),
+                        color: Colors.white.withOpacity(0.75)
                       ),
-                    );
-                  },
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                        size: 16,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Text("Select Location",style: GoogleFonts.poppins(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w300,
+                                color: const Color(0xfff7e5b7),
+                              ),)
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8 ),
+              margin: const EdgeInsets.only(left: 20,right: 20,top: 20,bottom: 5),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(24)
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: filterCities,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Search City...',
+                  prefixIcon: Icon(Icons.search)
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: filteredCities.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final city = filteredCities[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(left:16.0,right: 16,),
+                    child: Card(
+                      shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shadowColor: Colors.black26,
+                      child: ListTile(
+                        onTap: (){selectCity(city);},
+                        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        tileColor: const Color.fromARGB(255, 147, 137, 137).withOpacity(0.5),
+                        title: Text(city.city),
+                        subtitle: Text(city.country),
+                        trailing:Image.asset(city.isSelected == true ? 'assets/checked.png' : 'assets/unchecked.png', width: 30,),
+      
+
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+               
