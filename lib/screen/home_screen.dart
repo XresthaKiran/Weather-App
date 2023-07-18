@@ -148,7 +148,7 @@ class HomepageState extends State<Homepage> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
@@ -434,7 +434,7 @@ class HomepageState extends State<Homepage> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 10, top: 20),

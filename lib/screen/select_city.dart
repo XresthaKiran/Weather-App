@@ -130,7 +130,7 @@ class CitySelectionScreenState extends State<CitySelectionScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8 ),
-              margin: const EdgeInsets.only(left: 20,right: 20,top: 20,bottom: 5),
+              margin: const EdgeInsets.only(left: 20,right: 20,top: 6,bottom: 5),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(24)

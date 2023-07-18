@@ -49,11 +49,11 @@ class HelpScreenState extends State<HelpScreen> {
           child: Column(
             children: [
               
-              const SizedBox(height: 30),
+              
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    top: 90,
+                    top:120,
                     bottom: 50,
                     left: 60,
                     right: 60,
@@ -69,15 +69,15 @@ class HelpScreenState extends State<HelpScreen> {
                 ),
               ),
               SizedBox(
-                width: 88,
-                height: 110,
+                width: MediaQuery.of(context).size.width/4,
+                height: MediaQuery.of(context).size.width/4,
                 child: Image.asset(
                   'assets/R.png',
-                  width: 88,
-                  height: 110,
+                  width: MediaQuery.of(context).size.width/4,
+                  height: MediaQuery.of(context).size.width/4,
                 ),
               ),
-              const SizedBox(height: 20),
+               SizedBox(height:20),
               Text(
                 'Weather APP',
                 style: GoogleFonts.lato(
@@ -86,8 +86,8 @@ class HelpScreenState extends State<HelpScreen> {
                   color: const Color(0xfff7e5b7),
                 ),
               ),
-              const SizedBox(
-                height: 180,
+              SizedBox(
+                height: MediaQuery.of(context).size.width/2,
                 child: SpinKitCircle(
                   color: Colors.lightBlueAccent,
                   size: 50.0,
