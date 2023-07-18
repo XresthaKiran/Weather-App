@@ -77,7 +77,7 @@ class HelpScreenState extends State<HelpScreen> {
                   height: MediaQuery.of(context).size.width/4,
                 ),
               ),
-               SizedBox(height:20),
+               SizedBox(height:MediaQuery.of(context).size.width/17),
               Text(
                 'Weather APP',
                 style: GoogleFonts.lato(
