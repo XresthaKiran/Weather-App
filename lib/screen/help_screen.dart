@@ -19,7 +19,7 @@ class HelpScreenState extends State<HelpScreen> {
 
   Future<void> navigateToHome() async {
     await Future.delayed(const Duration(seconds: 5));
-    if (mounted) {
+    if (mounted) {                  // mounted handles exception which occurs when skip button pressed
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Homepage()),

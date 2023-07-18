@@ -20,42 +20,41 @@ class HomepageState extends State<Homepage> {
   Weather? weather;
   City? selectedCity;
   List<City> filteredCities = City.citiesList;
-  late bool servicePermission =false;
+  late bool servicePermission = false;
   late LocationPermission permission;
   @override
   void initState() {
     super.initState();
     loadSavedLocation();
   }
-  
-  void getLocation() async{
+
+  void getLocation() async {
+    // gets the loction of the user
     servicePermission = await Geolocator.isLocationServiceEnabled();
-    try{
+    try {
       permission = await Geolocator.checkPermission();
-      if(permission == LocationPermission.denied ){
+      if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      if(permission==LocationPermission.deniedForever){
+      if (permission == LocationPermission.deniedForever) {
         fetchWeatherDataForCity('kathmandu');
       }
-      if(servicePermission && permission == LocationPermission.whileInUse){
-        final position=await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-      );
-      final latitude=position.latitude;
-      final longitude=position.longitude;
-      fetchWeatherDataForLocation(latitude,longitude);
+      if (servicePermission && permission == LocationPermission.whileInUse) {
+        final position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        final latitude = position.latitude;
+        final longitude = position.longitude;
+        fetchWeatherDataForLocation(latitude, longitude);
       }
-      
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
- 
   }
 
-    void fetchWeatherDataForLocation(double latitude, double longitude) async {
+  void fetchWeatherDataForLocation(double latitude, double longitude) async {
     try {
-      final fetchedWeather = await WeatherApi.getDataForLocation(latitude, longitude);
+      final fetchedWeather =
+          await WeatherApi.getDataForLocation(latitude, longitude);
       setState(() {
         weather = fetchedWeather;
       });
@@ -63,13 +62,11 @@ class HomepageState extends State<Homepage> {
       print(e);
     }
   }
-
-
 
   Future<void> fetchWeatherDataForCity(String cityName) async {
+    //To get the weather information using cityName from the search/citiesList
     try {
-      final fetchedWeather = await WeatherApi.getData(
-          cityName); //To get the weather information using cityName from the search/citiesList
+      final fetchedWeather = await WeatherApi.getData(cityName);
       setState(() {
         weather = fetchedWeather;
       });
@@ -77,63 +74,56 @@ class HomepageState extends State<Homepage> {
       print(e);
     }
   }
-  
- 
-
 
   Future<void> openCitySelection() async {
+    //Opens CitySelectionScreen to search and select the city
     final selectedCity = await Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) =>
-              const CitySelectionScreen()), //Opens CitySelectionScreen to search and select the city
+      MaterialPageRoute(builder: (context) => const CitySelectionScreen()),
     );
     if (selectedCity != null) {
       setState(() {
-        this.selectedCity=selectedCity;
+        this.selectedCity = selectedCity;
       });
       fetchWeatherDataForCity(selectedCity.city);
     }
   }
 
-    Future<void> openHelpScreen() async {
-  await Navigator.push(
+  Future<void> openHelpScreen() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const HelpScreen()),
     );
-    
   }
 
-   void loadSavedLocation() async {
+  void loadSavedLocation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final savedLocation = prefs.getString('selectedCity');
     if (savedLocation != null) {
       setState(() {
-        selectedCity = City(
-          isSelected: true,city: savedLocation,
-          country: '');
+        selectedCity = City(isSelected: true, city: savedLocation, country: '');
       });
       fetchWeatherDataForCity(savedLocation);
-    }else{getLocation();}
+    } else {
+      getLocation();
+    }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-        resizeToAvoidBottomInset:
-            false, //solves screen overflow due to keyboard open
+        resizeToAvoidBottomInset: //solves screen overflow due to keyboard open
+            false,
         floatingActionButton: FloatingActionButton(
           onPressed: getLocation,
           child: const Icon(Icons.pin_drop_sharp),
         ),
         body: weather != null
             ? Container(
-                height: MediaQuery.of(context)
+                height: MediaQuery.of(
+                        context) // adapts the height and width according to screen size
                     .size
-                    .height, // adapts the height and width according to screen size
+                    .height,
                 width: MediaQuery.of(context).size.width,
                 decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -143,7 +133,6 @@ class HomepageState extends State<Homepage> {
                       Color.fromARGB(255, 21, 101, 192),
                       Color.fromARGB(255, 100, 181, 246)
                     ])),
-
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -152,7 +141,6 @@ class HomepageState extends State<Homepage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
-                            
                             padding: const EdgeInsets.only(left: 12, top: 25),
                             child: Text(
                               'Weather APP',
@@ -163,37 +151,37 @@ class HomepageState extends State<Homepage> {
                               ),
                             ),
                           ),
-                             Row(
-                               children: [
-                                 InkWell(
-                                                   onTap: openCitySelection,
-                                                   child: Container(
-                                                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                                                   margin: const EdgeInsets.fromLTRB(58, 31, 12, 7),
-                                                     width: 32,
-                                                     height: 32,
-                                                     decoration: BoxDecoration(
-                                                       borderRadius: BorderRadius.circular(150/2),
-                                                       color: Colors.white.withOpacity(0.75)
-                                                     ),
-                                                     child: const Icon(
-                                                       Icons.search_outlined,
-                                                       color: Colors.blue,
-                                                       size: 16,
-                                                     ),
-                                                   )
-                                                 ),
-
-
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10, top: 25),
-                            child: ElevatedButton(
+                          Row(
+                            children: [
+                              InkWell(
+                                  onTap: openCitySelection,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    margin: const EdgeInsets.fromLTRB(
+                                        58, 31, 12, 7),
+                                    width: 32,
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(150 / 2),
+                                        color: Colors.white.withOpacity(0.75)),
+                                    child: const Icon(
+                                      Icons.search_outlined,
+                                      color: Colors.blue,
+                                      size: 16,
+                                    ),
+                                  )),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 10, top: 25),
+                                child: ElevatedButton(
                                   onPressed: openHelpScreen,
                                   child: const Text('Help'),
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
-                               ],
-                             ),
                         ],
                       ),
                       const SizedBox(
@@ -219,7 +207,8 @@ class HomepageState extends State<Homepage> {
                                 width: 15,
                               ),
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -356,12 +345,12 @@ class HomepageState extends State<Homepage> {
                             ),
                           ),
                           Expanded(
-                            child: Container(
+                            child: Container(   //  Container to show Wind speed
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: Colors.white.withOpacity(0.6)),
                               margin: const EdgeInsets.fromLTRB(10, 0, 26,
-                                  0), //  Container to show Wind speed
+                                  0),
                               padding: const EdgeInsets.all(26),
                               height: 200,
                               child: Column(
@@ -418,7 +407,7 @@ class HomepageState extends State<Homepage> {
                   ),
                 ),
               )
-            : Container(
+            : Container(       // Loading screen
                 height: MediaQuery.of(context)
                     .size
                     .height, // adapts the height and width according to screen size
@@ -447,52 +436,51 @@ class HomepageState extends State<Homepage> {
                             ),
                           ),
                         ),
-                         Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                           children: [
-                             InkWell(
-                                                     onTap: openCitySelection,
-                                                     child: Container(
-                                                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                                                     margin: const EdgeInsets.fromLTRB(58, 36, 12, 7),
-                                                       width: 32,
-                                                       height: 32,
-                                                       decoration: BoxDecoration(
-                                                         borderRadius: BorderRadius.circular(150/2),
-                                                         color: Colors.white.withOpacity(0.75)
-                                                       ),
-                                                       child: const Icon(
-                                                         Icons.search_outlined,
-                                                         color: Colors.blue,
-                                                         size: 16,
-                                                       ),
-                                                     )
-                                                   ),
-                
-                        Padding(
-                                  padding: const EdgeInsets.only(right: 10, top: 25),
-                                  child: ElevatedButton(
-                                    onPressed: openHelpScreen,
-                                    child: const Text('Help'),
+                          children: [
+                            InkWell(
+                                onTap: openCitySelection,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(58, 36, 12, 7),
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(150 / 2),
+                                      color: Colors.white.withOpacity(0.75)),
+                                  child: const Icon(
+                                    Icons.search_outlined,
+                                    color: Colors.blue,
+                                    size: 16,
                                   ),
-                                ),
-                           ],
-                         ),
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 10, top: 25),
+                              child: ElevatedButton(
+                                onPressed: openHelpScreen,
+                                child: const Text('Help'),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height/1.2,
+                      height: MediaQuery.of(context).size.height / 1.2,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: 
-                        [
-                          CircularProgressIndicator(color: Color.fromARGB(255, 221, 229, 243),),
+                        children: [
+                          CircularProgressIndicator(
+                            color: Color.fromARGB(255, 221, 229, 243),
+                          ),
                         ],
                       ),
                     )
-                
-                
-                    
                   ]),
                 )));
   }
